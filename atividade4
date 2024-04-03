@@ -1,0 +1,97 @@
+#include <stdio.h>
+#include <string.h>
+ 
+#define MAX_PRODUTOS 100
+ 
+// Estrutura para representar um produto
+typedef struct {
+    int codigo;
+    char nome[50];
+    int quantidade;
+} Produto;
+ 
+// Função para cadastrar um produto no estoque
+void cadastrarProduto(Produto estoque[], int *quantidadeProdutos) {
+    if (*quantidadeProdutos < MAX_PRODUTOS) {
+        printf("Digite o código do produto: ");
+        scanf("%d", &estoque[*quantidadeProdutos].codigo);
+        printf("Digite o nome do produto: ");
+        scanf("%s", estoque[*quantidadeProdutos].nome);
+        printf("Digite a quantidade do produto: ");
+        scanf("%d", &estoque[*quantidadeProdutos].quantidade);
+       
+        (*quantidadeProdutos)++;
+        printf("Produto cadastrado com sucesso!\n");
+    } else {
+        printf("O estoque está cheio. Não é possível cadastrar mais produtos.\n");
+    }
+}
+ 
+// Função para buscar um produto no estoque pelo código
+void buscarProduto(Produto estoque[], int quantidadeProdutos, int codigo) {
+    for (int i = 0; i < quantidadeProdutos; i++) {
+        if (estoque[i].codigo == codigo) {
+            printf("Produto encontrado:\n");
+            printf("Código: %d\n", estoque[i].codigo);
+            printf("Nome: %s\n", estoque[i].nome);
+            printf("Quantidade: %d\n", estoque[i].quantidade);
+            return;
+        }
+    }
+    printf("Produto não encontrado no estoque.\n");
+}
+ 
+// Função para baixar a quantidade de um produto no estoque
+void baixarProduto(Produto estoque[], int quantidadeProdutos, int codigo, int quantidade) {
+    for (int i = 0; i < quantidadeProdutos; i++) {
+        if (estoque[i].codigo == codigo) {
+            if (estoque[i].quantidade >= quantidade) {
+                estoque[i].quantidade -= quantidade;
+                printf("Baixa realizada com sucesso!\n");
+            } else {
+                printf("Quantidade insuficiente em estoque para baixar.\n");
+            }
+            return;
+        }
+    }
+    printf("Produto não encontrado no estoque.\n");
+}
+ 
+int main() {
+    Produto estoque[MAX_PRODUTOS];
+    int quantidadeProdutos = 0;
+    int opcao;
+   
+    do {
+        printf("\nMenu:\n");
+        printf("1. Cadastrar produto\n");
+        printf("2. Buscar produto\n");
+        printf("3. Baixar produto\n");
+        printf("4. Sair\n");
+        printf("Escolha uma opção: ");
+        scanf("%d", &opcao);
+       
+        switch (opcao) {
+            case 1:
+                cadastrarProduto(estoque, &quantidadeProdutos);
+                break;
+            case 2: {
+                int codigo;
+                printf("Digite o código do produto: ");
+                scanf("%d", &codigo);
+                buscarProduto(estoque, quantidadeProdutos, codigo);
+                break;
+            }
+            case 3: {
+                int codigo, quantidade;
+                printf("Digite o código do produto: ");
+                scanf("%d", &codigo);
+                printf("Digite a quantidade a ser baixada: ");
+                scanf("%d", &quantidade);
+                baixarProduto(estoque, quantidadeProdutos, codigo, quantidade);
+                break;
+            }
+        }
+    }
+    return 0;
+}
